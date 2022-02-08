@@ -14,14 +14,16 @@ async function run() {
 
   const apiVersion = spec.info.version;
 
-  process.env.APPLE_API_VERSION = apiVersion;
   console.log("API:", apiVersion);
 
   const rootFolder = path.join(__dirname, "../");
   const contents = JSON.stringify(spec, null, 2);
 
+  if (process.env.CI) {
+    await fs.writeFile("apple-api-version.txt", apiVersion);
+  }
   const filePath = path.join(rootFolder, fileNameForSpec(spec));
-  console.log("Writing to:", filePath);
+  // console.log("Writing to:", filePath);
   await Promise.all([
     fs.writeFile(filePath, contents),
     fs.writeFile(path.join(rootFolder, "specs/latest.json"), contents),
