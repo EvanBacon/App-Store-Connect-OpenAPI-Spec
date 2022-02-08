@@ -28,10 +28,11 @@ jobs:
         working-directory: update
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
-        commit-message: "[Upgrade] ${{ env.APPLE_API_VERSION }}"
-        branch: spec-${{ env.APPLE_API_VERSION }}
-        title: "[Upgrade] ${{ env.APPLE_API_VERSION }}"
         with:
+          commit-message: "[Upgrade] ${{ env.APPLE_API_VERSION }}"
+          branch: spec-${{ env.APPLE_API_VERSION }}
+          title: "[Upgrade] ${{ env.APPLE_API_VERSION }}"
+          reviewers: EvanBacon
           token: ${{ secrets.GITHUB_TOKEN }}
           add-paths: |
             specs/*.json
