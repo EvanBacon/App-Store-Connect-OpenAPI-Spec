@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Update Apple Spec
 
 on:
   push:
@@ -9,7 +9,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    name: Try Upgrading Apple Spec
     steps:
       - uses: actions/checkout@v2
       - name: Set up Node
