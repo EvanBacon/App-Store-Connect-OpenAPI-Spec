@@ -1,10 +1,9 @@
 name: Update Apple Spec
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [$default-branch]
+  schedule:
+    # Everyday, 01:00 (UTC)
+    - cron: "0 1 * * *"
 
 jobs:
   test:
@@ -29,10 +28,14 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         with:
-          commit-message: "[Upgrade] ${{ env.APPLE_API_VERSION }}"
+          commit-message: "[Upgrade] App Store Connect API v${{ env.APPLE_API_VERSION }}"
           branch: spec-${{ env.APPLE_API_VERSION }}
-          title: "[Upgrade] ${{ env.APPLE_API_VERSION }}"
+          title: "[Upgrade] App Store Connect API v${{ env.APPLE_API_VERSION }}"
+          body: |
+            See the [App Store Connect API docs](https://developer.apple.com/documentation/appstoreconnectapi) for more info.
+            ---
           reviewers: EvanBacon
           token: ${{ secrets.GITHUB_TOKEN }}
+          labels: "automerge"
           add-paths: |
             specs/*.json

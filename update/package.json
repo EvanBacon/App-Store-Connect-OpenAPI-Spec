@@ -11,16 +11,12 @@
   "license": "ISC",
   "devDependencies": {
     "@tsconfig/node12": "^1.0.9",
-    "@types/btoa": "^1.2.3",
     "@types/fs-extra": "^9.0.13",
     "@types/node-fetch": "^3.0.3",
-    "@types/yauzl": "^2.9.2",
     "ts-node": "^10.5.0",
     "typescript": "^4.5.5"
   },
   "dependencies": {
-    "@octokit/rest": "^18.12.0",
-    "btoa": "^1.2.1",
     "fs-extra": "^10.0.0",
     "node-fetch": "2.6.2",
     "node-stream-zip": "^1.15.0"
