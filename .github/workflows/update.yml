@@ -1,0 +1,24 @@
+name: Update API
+on:
+  push:
+    branches: [master]
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    name: Try Upgrading Apple Spec
+    steps:
+      - name: Set up Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+      - name: Install
+        working-directory: update
+        run: yarn
+      - name: Run
+        working-directory: update
+        run: yarn start
