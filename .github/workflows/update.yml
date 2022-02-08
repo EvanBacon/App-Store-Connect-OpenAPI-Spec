@@ -17,8 +17,7 @@ jobs:
         with:
           node-version: 16
       - name: Install
-        working-directory: update
-        run: yarn
+        run: cd update && yarn
       - name: Run
         working-directory: update
         run: yarn start
