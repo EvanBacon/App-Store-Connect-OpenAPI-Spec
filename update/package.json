@@ -20,7 +20,7 @@
   "dependencies": {
     "@octokit/rest": "^18.12.0",
     "fs-extra": "^10.0.0",
-    "node-fetch": "2.6.2",
+    "node-fetch": "2.6.7",
     "node-stream-zip": "^1.15.0"
   }
 }
