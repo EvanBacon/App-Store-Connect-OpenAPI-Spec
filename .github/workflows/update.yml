@@ -26,11 +26,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: echo "APPLE_API_VERSION=$(cat apple-api-version.txt)" >> $GITHUB_ENV
         working-directory: update
-      - name: Create a pull request with the updated files
-        uses: branoholy/update-files-action@main
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        commit-message: "[Upgrade] ${{ env.APPLE_API_VERSION }}"
+        branch: spec-${{ env.APPLE_API_VERSION }}
+        title: "[Upgrade] ${{ env.APPLE_API_VERSION }}"
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch.name: spec-${{ env.APPLE_API_VERSION }}
-          branch.recreate: false
-          commit.paths: specs/*
-          commit.message: Upgrade spec to the latest ${{ env.APPLE_API_VERSION }}
+          add-paths: |
+            specs/*.json
