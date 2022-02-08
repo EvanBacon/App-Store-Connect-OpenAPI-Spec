@@ -20,7 +20,7 @@ async function run() {
   const contents = JSON.stringify(spec, null, 2);
 
   if (process.env.CI) {
-    await fs.writeFile("/apple-api-version.txt", apiVersion);
+    await fs.writeFile("apple-api-version.txt", apiVersion);
   }
   const filePath = path.join(rootFolder, fileNameForSpec(spec));
   // console.log("Writing to:", filePath);

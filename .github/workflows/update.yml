@@ -25,6 +25,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: echo "APPLE_API_VERSION=$(cat apple-api-version.txt)" >> $GITHUB_ENV
+        working-directory: update
       - name: Create a pull request with the updated files
         uses: branoholy/update-files-action@main
         with:
