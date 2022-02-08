@@ -3,6 +3,7 @@ import assert from "assert";
 import fs from "fs-extra";
 import fetch from "node-fetch";
 import StreamZip from "node-stream-zip";
+import os from "os";
 import path from "path";
 import { Stream } from "stream";
 import { promisify } from "util";
@@ -10,22 +11,21 @@ import { promisify } from "util";
 const pipeline = promisify(Stream.pipeline);
 
 export async function getLatestSpecAsync() {
-  const allTempDir = path.join(__dirname, "../temp");
-  const tempFile = path.join(allTempDir, "temp.zip");
-  const tempDir = path.join(allTempDir, "temp");
-  try {
-    await fs.remove(tempDir);
-    await fs.remove(tempFile);
-  } catch {}
+  const tmpDir = os.tmpdir();
+
+  const temporaryDirectory = fs.mkdtempSync(tmpDir + path.sep);
+  console.log("Temporary directory:", temporaryDirectory);
+  const tempFile = path.join(temporaryDirectory, "temp.zip");
+  const tempDir = path.join(temporaryDirectory, "temp");
   await fs.ensureDir(tempDir);
   await downloadZipFileAsync(
     "https://developer.apple.com/sample-code/app-store-connect/app-store-connect-openapi-specification.zip",
     tempFile
   );
   await unzipToDirectoryAsync(tempFile, tempDir);
-  const results = getJsonFileInDirectory(tempDir);
-  console.log("spec at:", results);
-  const jsonString = fs.readFileSync(results, "utf8");
+  const specFilePath = getJsonFileInDirectory(tempDir);
+  console.log("Spec downloaded at:", specFilePath);
+  const jsonString = fs.readFileSync(specFilePath, "utf8");
   const json = JSON.parse(jsonString);
 
   return json;

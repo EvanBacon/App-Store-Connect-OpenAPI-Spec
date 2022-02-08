@@ -17,7 +17,8 @@ jobs:
           cache: "yarn"
           cache-dependency-path: update/yarn.lock
       - name: Install
-        run: cd update && yarn
+        run: yarn
+        working-directory: update
       - name: Run
         working-directory: update
         run: yarn start
