@@ -33,10 +33,15 @@ async function checkIfSpecExistsAlready(spec: any): Promise<boolean> {
   assert(GITHUB_REPOSITORY_OWNER);
   assert(GITHUB_REPOSITORY);
 
+  const GITHUB_REPOSITORY_NAME = GITHUB_REPOSITORY.replace(
+    `${GITHUB_REPOSITORY_OWNER}/`,
+    ""
+  );
+
   const octokit = getOctokit();
   const { data: pullRequests } = await octokit.pulls.list({
     owner: GITHUB_REPOSITORY_OWNER,
-    repo: GITHUB_REPOSITORY,
+    repo: GITHUB_REPOSITORY_NAME,
     state: "open",
   });
   const pullRequest = pullRequests.find((pr) =>
@@ -47,7 +52,7 @@ async function checkIfSpecExistsAlready(spec: any): Promise<boolean> {
   }
   const { data: commits } = await octokit.repos.listCommits({
     owner: GITHUB_REPOSITORY_OWNER,
-    repo: GITHUB_REPOSITORY,
+    repo: GITHUB_REPOSITORY_NAME,
     pull_number: pullRequest.number,
   });
   const commit = commits.find((c) =>
@@ -66,6 +71,11 @@ async function openPullRequestAsync(spec: any): Promise<void> {
 
   assert(GITHUB_REPOSITORY_OWNER);
   assert(GITHUB_REPOSITORY);
+  const GITHUB_REPOSITORY_NAME = GITHUB_REPOSITORY.replace(
+    `${GITHUB_REPOSITORY_OWNER}/`,
+    ""
+  );
+
   const octokit = getOctokit();
   const { data: pullRequests } = await octokit.pulls.list({
     owner: "EvanBacon",
@@ -78,7 +88,7 @@ async function openPullRequestAsync(spec: any): Promise<void> {
   if (!pullRequest) {
     const { data: pullRequest } = await octokit.pulls.create({
       owner: GITHUB_REPOSITORY_OWNER,
-      repo: GITHUB_REPOSITORY,
+      repo: GITHUB_REPOSITORY_NAME,
       title: `Update spec to ${spec.info.version}`,
       body: `This is an automatic update to the spec to ${spec.info.version}`,
       base: "main",
@@ -87,7 +97,7 @@ async function openPullRequestAsync(spec: any): Promise<void> {
 
     const { data: commit } = await octokit.repos.createCommit({
       owner: GITHUB_REPOSITORY_OWNER,
-      repo: GITHUB_REPOSITORY,
+      repo: GITHUB_REPOSITORY_NAME,
       message: `Update spec to ${spec.info.version}`,
       tree: {
         base_tree: "",
