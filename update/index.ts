@@ -19,8 +19,7 @@ async function run() {
   console.log("API:", apiVersion);
 
   if (isCI) {
-    assert(process.env.GITHUB_TOKEN);
-    openPullRequestIfSpecDoesNotExistAsync(spec);
+    await openPullRequestIfSpecDoesNotExistAsync(spec);
   } else {
     const rootFolder = path.join(__dirname, "../");
     const contents = JSON.stringify(spec, null, 2);

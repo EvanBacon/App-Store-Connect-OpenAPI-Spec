@@ -22,3 +22,5 @@ jobs:
       - name: Run
         working-directory: update
         run: yarn start
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

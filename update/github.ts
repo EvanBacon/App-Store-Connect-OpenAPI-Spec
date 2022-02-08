@@ -1,6 +1,6 @@
 #!/usr/bin/env ts-node
 import { Octokit } from "@octokit/rest";
-import path from "path";
+import assert from "assert";
 
 export function fileNameForSpec(spec: any) {
   return `specs/${spec.info.version ?? "unversioned"}.json`;
@@ -17,17 +17,26 @@ export async function openPullRequestIfSpecDoesNotExistAsync(
   await openPullRequestAsync(spec);
 }
 
-async function checkIfSpecExistsAlready(spec: any): Promise<boolean> {
-  const token = process.env.GITHUB_TOKEN;
-  if (!token) {
-    throw new Error("GITHUB_TOKEN not set");
-  }
-  const octokit = new Octokit({
-    auth: `token ${token}`,
+function getOctokit() {
+  const { GITHUB_TOKEN } = process.env;
+
+  assert(GITHUB_TOKEN, "GITHUB_TOKEN is required");
+
+  return new Octokit({
+    auth: `token ${GITHUB_TOKEN}`,
   });
+}
+
+async function checkIfSpecExistsAlready(spec: any): Promise<boolean> {
+  const { GITHUB_REPOSITORY_OWNER, GITHUB_REPOSITORY } = process.env;
+
+  assert(GITHUB_REPOSITORY_OWNER);
+  assert(GITHUB_REPOSITORY);
+
+  const octokit = getOctokit();
   const { data: pullRequests } = await octokit.pulls.list({
-    owner: "EvanBacon",
-    repo: "App-Store-Connect-OpenAPI-Specification",
+    owner: GITHUB_REPOSITORY_OWNER,
+    repo: GITHUB_REPOSITORY,
     state: "open",
   });
   const pullRequest = pullRequests.find((pr) =>
@@ -37,8 +46,8 @@ async function checkIfSpecExistsAlready(spec: any): Promise<boolean> {
     return false;
   }
   const { data: commits } = await octokit.repos.listCommits({
-    owner: "EvanBacon",
-    repo: "App-Store-Connect-OpenAPI-Specification",
+    owner: GITHUB_REPOSITORY_OWNER,
+    repo: GITHUB_REPOSITORY,
     pull_number: pullRequest.number,
   });
   const commit = commits.find((c) =>
@@ -52,13 +61,12 @@ async function checkIfSpecExistsAlready(spec: any): Promise<boolean> {
 
 // open pull request with new file
 async function openPullRequestAsync(spec: any): Promise<void> {
-  const token = process.env.GITHUB_TOKEN;
-  if (!token) {
-    throw new Error("GITHUB_TOKEN not set");
-  }
-  const octokit = new Octokit({
-    auth: `token ${token}`,
-  });
+  const { GITHUB_REPOSITORY_OWNER, GITHUB_ACTOR, GITHUB_REPOSITORY } =
+    process.env;
+
+  assert(GITHUB_REPOSITORY_OWNER);
+  assert(GITHUB_REPOSITORY);
+  const octokit = getOctokit();
   const { data: pullRequests } = await octokit.pulls.list({
     owner: "EvanBacon",
     repo: "App-Store-Connect-OpenAPI-Specification",
@@ -69,14 +77,17 @@ async function openPullRequestAsync(spec: any): Promise<void> {
   );
   if (!pullRequest) {
     const { data: pullRequest } = await octokit.pulls.create({
-      owner: "EvanBacon",
-      repo: "App-Store-Connect-OpenAPI-Specification",
+      owner: GITHUB_REPOSITORY_OWNER,
+      repo: GITHUB_REPOSITORY,
       title: `Update spec to ${spec.info.version}`,
       body: `This is an automatic update to the spec to ${spec.info.version}`,
+      base: "main",
+      head: `${GITHUB_ACTOR}:${spec.info.version}`,
     });
+
     const { data: commit } = await octokit.repos.createCommit({
-      owner: "EvanBacon",
-      repo: "App-Store-Connect-OpenAPI-Specification",
+      owner: GITHUB_REPOSITORY_OWNER,
+      repo: GITHUB_REPOSITORY,
       message: `Update spec to ${spec.info.version}`,
       tree: {
         base_tree: "",
