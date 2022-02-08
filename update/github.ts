@@ -78,8 +78,8 @@ async function openPullRequestAsync(spec: any): Promise<void> {
 
   const octokit = getOctokit();
   const { data: pullRequests } = await octokit.pulls.list({
-    owner: "EvanBacon",
-    repo: "App-Store-Connect-OpenAPI-Specification",
+    owner: GITHUB_REPOSITORY_OWNER,
+    repo: GITHUB_REPOSITORY_NAME,
     state: "open",
   });
   const pullRequest = pullRequests.find((pr) =>
