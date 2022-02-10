@@ -2,8 +2,8 @@ name: Update Apple Spec
 
 on:
   schedule:
-    # Everyday, 01:00 (UTC)
-    - cron: "0 1 * * *"
+    # https://crontab.guru/#0_10,20_*_*_*
+    - cron: "0 10,20 * * *"
 
 jobs:
   test:
@@ -40,3 +40,11 @@ jobs:
           labels: "automerge"
           add-paths: |
             specs/*.json
+      - name: Tweet Results
+        uses: ethomson/send-tweet-action@v1
+        with:
+          status: "📣 App Store Connect v${{ env.APPLE_API_VERSION }} is now available!\nApple Docs: https://developer.apple.com/documentation/appstoreconnectapi\n\nAll Versions: https://github.com/EvanBacon/App-Store-Connect-OpenAPI-Spec/tree/main/specs"
+          consumer-key: ${{ secrets.TWITTER_CONSUMER_API_KEY }}
+          consumer-secret: ${{ secrets.TWITTER_CONSUMER_API_SECRET }}
+          access-token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          access-token-secret: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
