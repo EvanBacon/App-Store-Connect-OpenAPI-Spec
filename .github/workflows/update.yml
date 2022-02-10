@@ -35,6 +35,7 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           commit-message: "[Upgrade] App Store Connect API v${{ env.APPLE_API_VERSION }}"
+          base: main
           branch: spec-${{ env.APPLE_API_VERSION }}
           title: "[Upgrade] App Store Connect API v${{ env.APPLE_API_VERSION }}"
           body: |
