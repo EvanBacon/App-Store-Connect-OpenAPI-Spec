@@ -1,6 +1,11 @@
 name: Update Apple Spec
 
 on:
+  pull_request:
+    paths:
+      - .github/workflows/cli.yml
+      - specs/**
+      - update/**
   schedule:
     # https://crontab.guru/#0_10,20_*_*_*
     - cron: "0 10,20 * * *"
