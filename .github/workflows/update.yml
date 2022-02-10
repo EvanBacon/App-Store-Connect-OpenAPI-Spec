@@ -3,7 +3,7 @@ name: Update Apple Spec
 on:
   pull_request:
     paths:
-      - .github/workflows/cli.yml
+      - .github/workflows/update.yml
       - specs/**
       - update/**
   schedule:
