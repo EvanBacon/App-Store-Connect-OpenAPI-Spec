@@ -1,6 +1,11 @@
 name: Update Apple Spec
 
 on:
+  pull_request:
+    paths:
+      - .github/workflows/update.yml
+      - specs/**
+      - update/**
   schedule:
     # https://crontab.guru/#0_10,20_*_*_*
     - cron: "0 10,20 * * *"
@@ -30,6 +35,7 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           commit-message: "[Upgrade] App Store Connect API v${{ env.APPLE_API_VERSION }}"
+          base: main
           branch: spec-${{ env.APPLE_API_VERSION }}
           title: "[Upgrade] App Store Connect API v${{ env.APPLE_API_VERSION }}"
           body: |
