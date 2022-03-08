@@ -8,6 +8,7 @@ on:
       - update/**
   schedule:
     # https://crontab.guru/#0_10,20_*_*_*
+    #
     - cron: "0 10,20 * * *"
 
 jobs:
