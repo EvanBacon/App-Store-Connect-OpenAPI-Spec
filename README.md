@@ -9,3 +9,5 @@ Apple does not appear to keep a list of every instance of the OpenAPI schema so 
 This project runs a cron job in GitHub Actions to download the [generic link](https://developer.apple.com/sample-code/app-store-connect/app-store-connect-openapi-specification.zip) and open a PR with the latest spec if it changes.
 
 This repo is also seeded with various versions I've collected manually.
+
+#
