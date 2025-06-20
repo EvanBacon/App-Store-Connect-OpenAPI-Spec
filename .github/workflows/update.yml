@@ -22,19 +22,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4 # Updated to latest version
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Ensures full history for PR creation
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4 # Updated to latest version
+        uses: actions/setup-node@v4
         with:
-          node-version: 20 # Updated to a more recent LTS version
+          node-version: 20
           cache: yarn
           cache-dependency-path: update/yarn.lock
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile # Ensures consistent installs
+        run: yarn install --frozen-lockfile
         working-directory: update
 
       - name: Run update script
@@ -48,7 +48,7 @@ jobs:
         run: echo "APPLE_API_VERSION=$(cat apple-api-version.txt)" >> $GITHUB_ENV
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7 # Updated to latest version
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore: update App Store Connect API to v${{ env.APPLE_API_VERSION }}"
@@ -66,4 +66,4 @@ jobs:
           labels: automerge, api-update
           add-paths: |
             specs/*.json
-            apple-api-version.txt
+            update/apple-api-version.txt
