@@ -3,22 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "ts-node ./index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "bun run ./index.ts"
   },
   "keywords": [],
   "author": "Evan Bacon",
   "license": "MIT",
   "devDependencies": {
-    "@tsconfig/node12": "^1.0.9",
-    "@types/fs-extra": "^9.0.13",
-    "@types/node-fetch": "^3.0.3",
-    "ts-node": "^10.5.0",
-    "typescript": "^4.5.5"
+    "@types/bun": "^1.2.6"
   },
-  "dependencies": {
-    "fs-extra": "^10.0.0",
-    "node-fetch": "2.6.2",
-    "node-stream-zip": "^1.15.0"
-  }
+  "dependencies": {}
 }

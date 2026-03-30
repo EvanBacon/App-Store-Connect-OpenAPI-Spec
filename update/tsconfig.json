@@ -1,20 +1,13 @@
 {
-  "extends": "ts-node/node12/tsconfig.json",
-
-  "ts-node": {
-    "transpileOnly": true,
-
-    "files": true
-  },
   "compilerOptions": {
-    "lib": ["es2019", "es2020.promise", "es2020.bigint", "es2020.string"],
-    "module": "commonjs",
-    "target": "es2019",
-
+    "lib": ["es2022"],
+    "module": "esnext",
+    "target": "esnext",
+    "moduleResolution": "bundler",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node"
+    "types": ["bun-types"]
   }
 }
