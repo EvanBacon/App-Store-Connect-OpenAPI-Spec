@@ -24,20 +24,40 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # Ensures full history for PR creation
+
+      - name: Check Last-Modified
+        id: head_check
+        working-directory: update
+        run: |
+          REMOTE=$(curl -sSfI "https://developer.apple.com/sample-code/app-store-connect/app-store-connect-openapi-specification.zip" \
+            | awk -F': ' 'tolower($1)=="last-modified" {sub(/\r$/,"",$2); print $2}')
+          LOCAL=$(cat last-modified.txt 2>/dev/null | tr -d '\r\n' || echo "")
+          echo "remote: $REMOTE"
+          echo "local:  $LOCAL"
+          if [ -n "$REMOTE" ] && [ "$REMOTE" = "$LOCAL" ]; then
+            echo "Spec unchanged since $LOCAL — skipping."
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "remote_last_modified=$REMOTE" >> $GITHUB_OUTPUT
+          fi
 
       - name: Set up Bun
+        if: steps.head_check.outputs.changed == 'true'
         uses: oven-sh/setup-bun@v2
 
       - name: Install dependencies
+        if: steps.head_check.outputs.changed == 'true'
         run: bun install --frozen-lockfile
         working-directory: update
 
       - name: Run update script
+        if: steps.head_check.outputs.changed == 'true'
         id: update
         working-directory: update
-        run: bun run ./index.ts
+        run: |
+          bun run ./index.ts
+          printf '%s\n' "${{ steps.head_check.outputs.remote_last_modified }}" > last-modified.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -98,6 +118,18 @@ jobs:
           add-paths: |
             specs/*.json
             update/apple-api-version.txt
+            update/last-modified.txt
+
+      - name: Commit last-modified bump (no version change)
+        if: steps.head_check.outputs.changed == 'true' && steps.update.outputs.has_update != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add update/last-modified.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: bump Apple spec Last-Modified (no version change)"
+            git push
+          fi
 
   notify-failure:
     runs-on: ubuntu-latest
