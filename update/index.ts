@@ -89,7 +89,7 @@ async function run() {
     const summary = generateDiffSummary(oldSpec, spec);
     console.log("\nDiff summary:\n" + summary);
     if (process.env.CI) {
-      await Bun.write("diff-summary.md", summary);
+      await Bun.write("diff-summary.md", summary + "\n");
     }
   }
 

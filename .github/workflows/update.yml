@@ -74,6 +74,7 @@ jobs:
             {
               echo 'DIFF_SUMMARY<<EOF'
               cat diff-summary.md
+              echo ''
               echo 'EOF'
             } >> $GITHUB_ENV
           fi
